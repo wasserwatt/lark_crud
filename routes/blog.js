@@ -37,6 +37,22 @@ route.post("/create", async (req, res, next) => {
     console.log("body::==", req.body)
     console.log("params::==", req.params)
     const blog = req.body
+    // Check if the required fields exist
+    if (!blog || !blog.postId) {
+        return res
+            .status(400)
+            .json({ error: "PostId is required to create a blog." })
+    }
+
+    // Check if the blog already exists
+    const existingBlog = await Blog.findOne({ where: { postId: blog.postId } })
+
+    if (existingBlog) {
+        // Blog with the same postId already exists, return an error
+        return res
+            .status(400)
+            .json({ error: "Blog with the same postId already exists." })
+    }
     let newBlog = null
     if (blog) {
         newBlog = await sequelize.transaction(function (t) {
@@ -54,6 +70,22 @@ route.put("/update/:id", async (req, res, next) => {
     const blog = req.body
     const postId = req.params.id
     let updateBlog = null
+    // Check if the required fields exist
+    if (!blog || !blog.postId) {
+        return res
+            .status(400)
+            .json({ error: "PostId is required to update a blog." })
+    }
+
+    // Check if the blog already exists
+    const existingBlog = await Blog.findOne({ where: { postId: blog.postId } })
+
+    if (existingBlog) {
+        // Blog with the same postId already exists, return an error
+        return res
+            .status(400)
+            .json({ error: "Blog with the same postId already exists." })
+    }
     if (blog && postId) {
         updateBlog = await sequelize.transaction(function (t) {
             return Blog.update(
