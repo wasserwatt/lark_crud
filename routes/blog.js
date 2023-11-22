@@ -1,6 +1,10 @@
 // import lib
 const express = require("express")
 const db = require("../util/db.config")
+const {
+    checkRequiredFields,
+    checkIfBlogExistsByPostId,
+} = require("./blogUtils")
 // define variable
 const sequelize = db.sequelize
 const Blog = db.blog
@@ -37,30 +41,26 @@ route.post("/create", async (req, res, next) => {
     console.log("body::==", req.body)
     console.log("params::==", req.params)
     const blog = req.body
-    // Check if the required fields exist
-    if (!blog || !blog.postId) {
-        return res
-            .status(400)
-            .json({ error: "PostId is required to create a blog." })
-    }
+    try {
+        // Check if required fields exist
+        await checkRequiredFields(blog)
 
-    // Check if the blog already exists
-    const existingBlog = await Blog.findOne({ where: { postId: blog.postId } })
+        // Check if the blog already exists
+        await checkIfBlogExistsByPostId(blog.postId)
 
-    if (existingBlog) {
-        // Blog with the same postId already exists, return an error
-        return res
-            .status(400)
-            .json({ error: "Blog with the same postId already exists." })
+        let newBlog = null
+
+        if (blog) {
+            newBlog = await sequelize.transaction(function (t) {
+                // chain all your queries here. make sure you return them.
+                return Blog.create(blog, { transaction: t })
+            })
+        }
+
+        res.json(newBlog)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
     }
-    let newBlog = null
-    if (blog) {
-        newBlog = await sequelize.transaction(function (t) {
-            // chain all your queries here. make sure you return them.
-            return Blog.create(blog, { transaction: t })
-        })
-    }
-    res.json(newBlog)
 })
 
 //update blog
@@ -69,33 +69,29 @@ route.put("/update/:id", async (req, res, next) => {
     console.log("params::==", req.params)
     const blog = req.body
     const postId = req.params.id
-    let updateBlog = null
-    // Check if the required fields exist
-    if (!blog || !blog.postId) {
-        return res
-            .status(400)
-            .json({ error: "PostId is required to update a blog." })
-    }
+    try {
+        // Check if required fields exist
+        await checkRequiredFields(blog)
 
-    // Check if the blog already exists
-    const existingBlog = await Blog.findOne({ where: { postId: blog.postId } })
+        // Check if the blog already exists
+        await checkIfBlogExistsByPostId(blog.postId)
 
-    if (existingBlog) {
-        // Blog with the same postId already exists, return an error
-        return res
-            .status(400)
-            .json({ error: "Blog with the same postId already exists." })
+        let updateBlog = null
+
+        if (blog && postId) {
+            updateBlog = await sequelize.transaction(function (t) {
+                return Blog.update(
+                    blog,
+                    { where: { postId: postId } },
+                    { transaction: t }
+                )
+            })
+        }
+
+        res.json(updateBlog)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
     }
-    if (blog && postId) {
-        updateBlog = await sequelize.transaction(function (t) {
-            return Blog.update(
-                blog,
-                { where: { postId: postId } },
-                { transaction: t }
-            )
-        })
-    }
-    res.json(updateBlog)
 })
 
 //delete blog with id
