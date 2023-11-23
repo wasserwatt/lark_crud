@@ -10,12 +10,6 @@ const sequelize = db.sequelize
 const Blog = db.blog
 const route = express.Router()
 
-/*
-TO DO
-1. Err handle for dup creation
-2.
-*/
-
 // get blog with id
 route.get("/find/id/:id", async (req, res, next) => {
     console.log("body::==", req.body)

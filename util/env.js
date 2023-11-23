@@ -1,3 +1,4 @@
+// DB access info
 const env = {
     database: "mock_up",
     username: "root",

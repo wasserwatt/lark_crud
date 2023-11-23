@@ -9,4 +9,4 @@ app.use(express.urlencoded({ extended: false }))
 const blogRoute = require("./routes/blog")
 app.use("/blog", blogRoute)
 // set port & run server
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`App listening on port ${port}!`))

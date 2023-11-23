@@ -1,3 +1,4 @@
+// Set DB access and export db var as a blog of DB
 const { Sequelize, DataTypes } = require("sequelize")
 const env = require("./env")
 const sequelize = new Sequelize(env.database, env.username, env.password, {
