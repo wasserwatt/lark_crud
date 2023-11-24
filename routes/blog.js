@@ -36,11 +36,16 @@ route.get("/find/all", async (req, res, next) => {
         // const jsonData = require("./path/to/data.json")
 
         // Make a POST request to /webhook with the JSON data
-        await axios.post("http://localhost:3000/webhook")
+        const response = await axios.post("http://localhost:3000/webhook")
+        // Log the response data
+        console.log("Response from /webhook:", response.data)
 
-        console.log("Webhook request sent successfully")
+        console.log("BLOG.JS to /webhook successful")
     } catch (error) {
-        console.error("Error sending webhook request:", error.message)
+        console.error(
+            "Error sending webhook request from BLOG.JS:",
+            error.message
+        )
     }
 })
 
