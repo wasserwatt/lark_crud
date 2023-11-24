@@ -32,11 +32,21 @@ route.get("/find/all", async (req, res, next) => {
         const blogs = await Blog.findAll()
         res.json(blogs)
 
-        // Assuming you have a JSON file named 'data.json'
-        // const jsonData = require("./path/to/data.json")
+        // JSON object
+        const jsonData = {
+            operation: "find all",
+        }
 
         // Make a POST request to /webhook with the JSON data
-        const response = await axios.post("http://localhost:3000/webhook")
+        const response = await axios.post(
+            "http://localhost:3000/webhook",
+            jsonData,
+            {
+                headers: {
+                    "Content-Type": "application/json", // Set the content type to application/json
+                },
+            }
+        )
         // Log the response data
         console.log("Response from /webhook:", response.data)
 
