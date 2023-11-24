@@ -1,5 +1,6 @@
 // import lib
 const express = require("express")
+const axios = require("axios")
 const db = require("../util/db.config")
 const {
     checkRequiredFields,
@@ -24,10 +25,23 @@ route.get("/find/id/:id", async (req, res, next) => {
 
 // get blogs all
 route.get("/find/all", async (req, res, next) => {
-    console.log("body::==", req.body)
-    console.log("params::==", req.params)
-    const blogs = await Blog.findAll()
-    res.json(blogs)
+    try {
+        console.log("body::==", req.body)
+        console.log("params::==", req.params)
+
+        const blogs = await Blog.findAll()
+        res.json(blogs)
+
+        // Assuming you have a JSON file named 'data.json'
+        // const jsonData = require("./path/to/data.json")
+
+        // Make a POST request to /webhook with the JSON data
+        await axios.post("http://localhost:3000/webhook")
+
+        console.log("Webhook request sent successfully")
+    } catch (error) {
+        console.error("Error sending webhook request:", error.message)
+    }
 })
 
 //create blog
