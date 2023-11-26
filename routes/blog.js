@@ -21,6 +21,23 @@ route.get("/find/id/:id", async (req, res, next) => {
     if (blogId) {
         blogs = await Blog.findByPk(blogId)
     }
+    // JSON object
+    const jsonData = {
+        operation: "find by id",
+        id: blogId,
+        status: "sucessful",
+    }
+    // CRUD API STABLE
+    // Make a POST request to /webhook with the JSON data
+    const response = await axios.post(
+        "http://localhost:3000/webhook",
+        jsonData,
+        {
+            headers: {
+                "Content-Type": "application/json", // Set the content type to application/json
+            },
+        }
+    )
     res.json(blogs)
 })
 
