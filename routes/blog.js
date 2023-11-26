@@ -35,6 +35,7 @@ route.get("/find/all", async (req, res, next) => {
         // JSON object
         const jsonData = {
             operation: "find all",
+            status: "sucessful",
         }
 
         // Make a POST request to /webhook with the JSON data
@@ -48,9 +49,11 @@ route.get("/find/all", async (req, res, next) => {
             }
         )
         // Log the response data
-        console.log("Response from /webhook:", response.data)
+        //console.log("Response from /webhook:", response) // Print like this will get [object Object]
+        //console.log(response.data)
+        //console.dir(JSON.stringify(response.data.operation))
 
-        console.log("BLOG.JS to /webhook successful")
+        console.log("BLOG.JS request to /webhook successful")
     } catch (error) {
         console.error(
             "Error sending webhook request from BLOG.JS:",

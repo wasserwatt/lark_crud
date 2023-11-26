@@ -13,15 +13,12 @@ const blogRoute = require("./routes/blog")
 app.use("/blog", blogRoute)
 // route web hook
 app.post("/webhook", (req, res) => {
-    console.log("Received webhook request:", req.body)
-    // Extract JSON data from the request body
     const receivedJson = req.body
-    console.log("File type receivedJson::==", typeof receivedJson)
-    console.log("ReceivedJson::==", receivedJson)
+    console.log("Webhook received JSON from API::==", receivedJson)
     // Handle the webhook request here
-    res.status(200).send(
-        `Request successfull Received text: ${receivedJson.operation}`
-    )
+
+    //res.status(200).send(`Request successfull Received text: ${receivedJson}`)
+    res.status(200).json(`/webhook response: ${receivedJson}`)
 })
 // set port & run server
 app.listen(port, () => console.log(`App listening on port ${port}!`))
