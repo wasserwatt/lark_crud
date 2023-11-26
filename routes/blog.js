@@ -6,6 +6,7 @@ const {
     checkRequiredFields,
     checkIfBlogExistsByPostId,
 } = require("./blogUtils")
+const { sendToWebhook } = require("./webhookUtils")
 // define variable
 const sequelize = db.sequelize
 const Blog = db.blog
@@ -64,8 +65,8 @@ route.get("/find/all", async (req, res, next) => {
 
 //create blog
 route.post("/create", async (req, res, next) => {
-    console.log("body::==", req.body)
-    console.log("params::==", req.params)
+    // console.log("body::==", req.body)
+    // console.log("params::==", req.params)
     const blog = req.body
     try {
         // Check if required fields exist
@@ -80,6 +81,11 @@ route.post("/create", async (req, res, next) => {
             newBlog = await sequelize.transaction(function (t) {
                 // chain all your queries here. make sure you return them.
                 return Blog.create(blog, { transaction: t })
+            })
+            await axios.post("http://localhost:3000/webhook", newBlog, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
             })
         }
 
