@@ -38,7 +38,7 @@ route.get("/find/all", async (req, res, next) => {
             operation: "find all",
             status: "sucessful",
         }
-
+        // CRUD API STABLE
         // Make a POST request to /webhook with the JSON data
         const response = await axios.post(
             "http://localhost:3000/webhook",
