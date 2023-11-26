@@ -118,6 +118,11 @@ route.put("/update/:id", async (req, res, next) => {
                     { transaction: t }
                 )
             })
+            await axios.post("http://localhost:3000/webhook", blog, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
         }
 
         res.json(updateBlog)
@@ -137,6 +142,11 @@ route.delete("/delete/:id", async (req, res, next) => {
         if (blog) {
             blogDestroy = await blog.destroy()
         }
+        await axios.post("http://localhost:3000/webhook", blog, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
     }
     res.json(blogDestroy)
 })
