@@ -3,7 +3,7 @@ const Blog = require("../util/db.config").blog
 
 async function checkRequiredFields(blog) {
     if (!blog || !blog.postId) {
-        throw new Error("PostId is required to create a blog.")
+        throw new Error("PostId is required to process.")
     }
 }
 

@@ -10,14 +10,18 @@ export default function () {
     // Generate a random blog object for testing
     let blog = {
         // Add your blog properties here
-        title: "Test Blog",
-        content: "This is a test blog post.",
+        postId: 0,
+        postTitle: "testTitle",
+        postDetail: "testDetail",
+        postDtm: "2023-12-02",
+        postAuthor: "tester",
+        postStatus: 1,
         // Add other required properties
     }
 
     // Send a POST request to create a new blog
     let createResponse = http.post(
-        "http://localhost:your_port_number/create",
+        "http://localhost:3000/blog/create",
         JSON.stringify(blog),
         {
             headers: {
@@ -37,7 +41,7 @@ export default function () {
     // You can add additional tests for other API endpoints (e.g., updating, deleting)
 
     // Example: Send a GET request to retrieve all blogs
-    let getAllResponse = http.get("http://localhost:your_port_number/find/all")
+    let getAllResponse = http.get("http://localhost:3000/blog/find/all")
 
     // Check if the GET request was successful (status code 200)
     check(getAllResponse, {

@@ -87,7 +87,7 @@ route.post("/create", async (req, res, next) => {
     const blog = req.body
     try {
         // Check if required fields exist
-        await checkRequiredFields(blog)
+        // await checkRequiredFields(blog)
 
         // Check if the blog already exists
         await checkIfBlogExistsByPostId(blog.postId)
@@ -153,19 +153,24 @@ route.delete("/delete/:id", async (req, res, next) => {
     console.log("body::==", req.body)
     console.log("params::==", req.params)
     const blogId = req.params.id
-    let blogDestroy = null
-    if (blogId) {
-        const blog = await Blog.findByPk(blogId)
-        if (blog) {
-            blogDestroy = await blog.destroy()
+    try {
+        await checkRequiredFields(blog)
+        let blogDestroy = null
+        if (blogId) {
+            const blog = await Blog.findByPk(blogId)
+            if (blog) {
+                blogDestroy = await blog.destroy()
+            }
+            await axios.post("http://localhost:3000/webhook", blog, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
         }
-        await axios.post("http://localhost:3000/webhook", blog, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        res.json(blogDestroy)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
     }
-    res.json(blogDestroy)
 })
 
 module.exports = route
