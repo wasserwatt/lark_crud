@@ -1,26 +1,34 @@
 import http from "k6/http"
+import { check, sleep } from "k6"
 
 export const options = {
     discardResponseBodies: true,
     scenarios: {
-        userCreateBlog: {
+        contacts: {
             executor: "constant-vus",
-            exec: "createBlog",
-            vus: 50,
-            duration: "30s",
+            exec: "contacts",
+            vus: 1,
+            duration: "5s",
         },
         news: {
             executor: "per-vu-iterations",
             exec: "news",
-            vus: 50,
-            iterations: 100,
-            startTime: "30s",
+            vus: 1,
+            iterations: 2,
+            startTime: "6s",
             maxDuration: "1m",
+        },
+        userCreateBlog: {
+            executor: "constant-vus",
+            exec: "createBlog",
+            vus: 30,
+            startTime: "7s",
+            duration: "30s",
         },
     },
 }
 
-export function crateBlog() {
+export function createBlog() {
     // Generate a random blog object for testing
     let blog = {
         // Add your blog properties here
