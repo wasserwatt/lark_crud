@@ -4,25 +4,17 @@ import { check, sleep } from "k6"
 export const options = {
     discardResponseBodies: true,
     scenarios: {
-        contacts: {
-            executor: "constant-vus",
-            exec: "contacts",
-            vus: 1,
-            duration: "5s",
-        },
-        news: {
-            executor: "per-vu-iterations",
-            exec: "news",
-            vus: 1,
-            iterations: 2,
-            startTime: "6s",
-            maxDuration: "1m",
-        },
         userCreateBlog: {
             executor: "constant-vus",
             exec: "createBlog",
             vus: 30,
-            startTime: "7s",
+            duration: "30s",
+        },
+        userUpdateBlog: {
+            executor: "constant-vus",
+            exec: "updateBlog",
+            vus: 1,
+            startTime: "31s",
             duration: "30s",
         },
     },
@@ -63,20 +55,22 @@ export function updateBlog() {
     const baseUrl = "http://localhost:3000"
 
     // Generate a random postId in the range of 1-4400 for testing
-    const postId = Math.floor(Math.random() * 4400) + 1
-
+    const postId = Math.floor(Math.random() * 869) + 1
+    let fixPostId = 700
     // Define the payload for the update request
     const payload = {
-        postTitle: "Updated",
-        postDetail: "Updated",
-        postDtm: "2023-12-07",
+        postId: fixPostId,
+        postTitle: "updatedTitle",
+        postDetail: "UpdatedDetail",
+        postDtm: "3000-11-22",
         postAuthor: "tester",
         postStatus: 1,
     }
 
     // Send the update request
     const updateResponse = http.put(
-        `${baseUrl}/update/${postId}`,
+        `http://localhost:3000/blog/update/${fixPostId}`,
+        //`${baseUrl}/blog/update/${postId}`,
         JSON.stringify(payload),
         {
             headers: {

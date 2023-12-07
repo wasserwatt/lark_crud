@@ -5,6 +5,7 @@ const db = require("../util/db.config")
 const {
     checkRequiredFields,
     checkIfBlogExistsByPostId,
+    checkIfBlogExistsByPostIdForUpdateBlog,
 } = require("./blogUtils")
 const { sendToWebhook } = require("./webhookUtils")
 // define variable
@@ -115,7 +116,7 @@ route.post("/create", async (req, res, next) => {
 //update blog
 route.put("/update/:id", async (req, res, next) => {
     console.log("body::==", req.body)
-    console.log("params::==", req.params)
+    //console.log("params::==", req.params)
     const blog = req.body
     const postId = req.params.id
     try {
@@ -123,10 +124,23 @@ route.put("/update/:id", async (req, res, next) => {
         await checkRequiredFields(blog)
 
         // Check if the blog already exists
-        await checkIfBlogExistsByPostId(blog.postId)
+        await checkIfBlogExistsByPostIdForUpdateBlog(
+            blog.postId,
+            blog.postNewId
+        )
+
+        // Check if the object has both keys before swapping and deleting
+        if ("postId" in blog && "postNewId" in blog) {
+            // Swap the values of postId and postNewId
+            ;[blog.postId, blog.postNewId] = [blog.postNewId, blog.postId]
+
+            // Remove the postNewId key and its value
+            delete blog.postNewId
+        }
 
         let updateBlog = null
-
+        console.log("newBlog", blog)
+        console.log("blablablabl")
         if (blog && postId) {
             updateBlog = await sequelize.transaction(function (t) {
                 return Blog.update(
