@@ -10,7 +10,8 @@ export default function () {
     console.log("postId::==", postId)
     // Define the payload for the update request
     const payload = {
-        postId: 8000,
+        postId: postId,
+        postNewId: postId,
         postTitle: "อัพเดทแล้ว",
         postDetail: "อัพเดทแล้ว",
         postDtm: "3000-11-22",
@@ -20,7 +21,7 @@ export default function () {
 
     // Send the update request
     const updateResponse = http.put(
-        `http://localhost:3000/blog/update/8000`,
+        `${baseUrl}/blog/update/${postId}`,
         JSON.stringify(payload),
         {
             headers: {
