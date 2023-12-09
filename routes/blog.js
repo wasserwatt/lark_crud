@@ -39,7 +39,7 @@ route.get("/find/id/:id", async (req, res, next) => {
             },
         }
     )
-    res.json(blogs)
+    res.status(200).json(blogs)
 })
 
 // get blogs all
@@ -222,7 +222,7 @@ route.delete("/delete/:id", async (req, res, next) => {
             }
         )
         // Respond with a 204 No Content for successful deletion
-        res.status(204)
+        res.status(200).json(deletedBlog)
         // if you want to response the deletedBlog
         // use 200 status
         //res.json(deletedBlog)

@@ -6,7 +6,7 @@ export default function () {
     const baseUrl = "http://localhost:3000"
 
     // Define the endpoint for finding a blog by ID
-    const endpoint = "/find/id/1" // Replace '1' with the desired blog ID
+    const endpoint = "/blog/find/id/47" // Replace '1' with the desired blog ID
 
     // Define the expected response status code
     const expectedStatusCode = 200
