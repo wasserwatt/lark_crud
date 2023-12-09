@@ -221,8 +221,11 @@ route.delete("/delete/:id", async (req, res, next) => {
                 },
             }
         )
-
-        res.json(deletedBlog)
+        // Respond with a 204 No Content for successful deletion
+        res.status(204)
+        // if you want to response the deletedBlog
+        // use 200 status
+        //res.json(deletedBlog)
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
