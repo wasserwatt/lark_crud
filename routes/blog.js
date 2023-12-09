@@ -161,7 +161,7 @@ route.put("/update/:id", async (req, res, next) => {
         res.status(400).json({ error: error.message })
     }
 })
-
+/*
 //delete blog with id
 route.delete("/delete/:id", async (req, res, next) => {
     console.log("body::==", req.body)
@@ -182,6 +182,47 @@ route.delete("/delete/:id", async (req, res, next) => {
             })
         }
         res.json(blogDestroy)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+*/
+
+// delete blog with id
+route.delete("/delete/:id", async (req, res, next) => {
+    console.log("params::==", req.params)
+    const blogId = req.params.id
+    try {
+        if (!blogId) {
+            throw new Error("Blog ID is required for deletion.")
+        }
+
+        const blog = await Blog.findByPk(blogId)
+        if (!blog) {
+            throw new Error("Blog not found for the given ID.")
+        }
+
+        const deletedBlog = await blog.destroy()
+
+        // JSON object
+        const jsonData = {
+            operation: "delete",
+            id: blogId,
+            status: "successful",
+        }
+
+        // Make a POST request to /webhook with the JSON data
+        const response = await axios.post(
+            "http://localhost:3000/webhook",
+            jsonData,
+            {
+                headers: {
+                    "Content-Type": "application/json", // Set the content type to application/json
+                },
+            }
+        )
+
+        res.json(deletedBlog)
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
