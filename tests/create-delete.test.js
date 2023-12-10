@@ -10,9 +10,9 @@ export const options = {
             vus: 30,
             duration: "30s",
         },
-        userDeleteBlog: {
+        userUpdateBlog: {
             executor: "constant-vus",
-            exec: "deleteBlog",
+            exec: "updateBlog",
             vus: 1,
             startTime: "31s",
             duration: "30s",
@@ -50,16 +50,4 @@ export function createBlog() {
     sleep(1)
 }
 
-export function deleteBlog() {
-    // Replace the URL with your actual API endpoint and blog ID
-    let response = http.del("http://localhost:3000/blog/delete/13")
-
-    console.log("Response:", response.body)
-
-    // Check if the response status is 200 OK
-    check(response, {
-        "Status is 200": (r) => r.status === 200,
-    })
-    // Sleep for 1 second before the next iteration
-    sleep(1)
-}
+export function updateBlog() {}
